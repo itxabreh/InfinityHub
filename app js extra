@@ -1,0 +1,59 @@
+const App = () =>{
+ const [initializing , setInitializing] = useState(true);
+ const [user,setUser] = useState();
+
+ function onAuthStateChanged(user){
+  setUser(user);
+  if(initializing) setInitializing(false);
+ }
+
+ useEffect(() =>{
+  const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+  return subscriber;
+ },[]);
+
+ if(initializing) return null;
+ if (!user) {
+  return (
+    <NavigationContainer>
+      <HomeStack.Navigator >
+      <HomeStack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+        <HomeStack.Screen name="SignUp" component={SignUp} options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: '', headerLeft: () => (
+          <Image
+            source={require('./assets/applogo-removebg.png')}
+            style={{ width: 40, height: 40, }}
+          />
+        )}} />
+
+        <HomeStack.Screen name="Login" component={Login} options={{ headerShown: false }} />
+
+      </HomeStack.Navigator>
+    </NavigationContainer>
+  );
+}
+
+return (
+  <NavigationContainer>
+    <Stack.Navigator>
+   
+      <Stack.Screen
+  name="VerificationScreen"
+  component={VerificationScreen}
+  options={{ headerShown: false }}/>
+
+
+
+      <Stack.Screen name="Tabs" component={Tabs} options={{ headerShown: false }} />
+
+      <Stack.Screen name="Extra2" component={Extra2} />
+      <Stack.Screen name="YouTubePlayerScreen" component={YouTubePlayerScreen} />
+      <Stack.Screen name="MovieDetailsScreen" component={MovieDetailsScreen} options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: '', headerRight: () => (
+        <Image
+          source={require('./assets/applogo-removebg.png')}
+          style={{ width: 40, height: 40, marginRight: 2 }}
+        />
+      )}} />
+    </Stack.Navigator>
+  </NavigationContainer>
+);
+};
