@@ -19,7 +19,7 @@ class MyAccountScreen extends Component {
     try {
       const response = await axios.get('https://www.googleapis.com/youtube/v3/search', {
         params: {
-          key: 'YOUR_YOUTUBE_API_KEY',
+          key: 'AIzaSyAjwfp7NtheyVWVl7DMj2NCYzZ5J9mpahs',
           part: 'snippet',
           type: 'video',
           q: `${section.title} trailer`,
