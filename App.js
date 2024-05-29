@@ -23,7 +23,15 @@ import AppSettings from './AppSettings';
 import Account from './Account';
 import Help from './Help';
 import MovieDetailsSecondPart from './MovieDetailsSecondPart';
-
+import MyShare from './MyShare';
+import Mylist from './Mylist';
+import Like from './Like';
+import Forget from './Forget';
+import Privacy from './Privacy';
+import MyCustomHook from './MyCustomHook';
+import styles from './styles';
+import CustomButton from './CustomButton';
+import Type from './Type'
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
 
@@ -85,15 +93,45 @@ const App = () => {
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState();
  
-  useEffect(() =>{
-    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber;
-  },[]);
+  // useEffect(() =>{
+  //   const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+  //   return subscriber;
+  // },[]);
 
-  function onAuthStateChanged(user){
+  // function onAuthStateChanged(user){
+  //   setUser(user);
+  //   if(initializing) setInitializing(false);
+  // }
+
+  useEffect(() => {
+    const loadUser = async () => {
+      try {
+        const userData = await AsyncStorage.getItem('user');
+        if (userData) {
+          setUser(JSON.parse(userData));
+        }
+      } catch (error) {
+        console.error('Failed to load user from AsyncStorage', error);
+      } finally {
+        setInitializing(false);
+      }
+    };
+    loadUser();
+
+    const subscriber = firebase.auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // Unsubscribe on unmount
+  }, []);
+
+  const onAuthStateChanged = async (user) => {
     setUser(user);
-    if(initializing) setInitializing(false);
-  }
+    if (user) {
+      await AsyncStorage.setItem('user', JSON.stringify(user));
+    } else {
+      await AsyncStorage.removeItem('user');
+    }
+    if (initializing) setInitializing(false);
+  };
+
 
   if (initializing) return null;
 
@@ -112,6 +150,7 @@ const App = () => {
       <Stack.Navigator>
         {!user ? (
           <>
+          <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
             <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
             <Stack.Screen name="SignUp" component={SignUp} options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: '', headerLeft: () => (
               <Image
@@ -119,6 +158,8 @@ const App = () => {
                 style={{ width: 40, height: 40 }}
               />
             )}} />
+           <Stack.Screen name="Forget" component={Forget}  options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: 'Forget Password ?'}}/>
+           <Stack.Screen name="Privacy" component={Privacy} options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: 'Privacy Policy'}} />
           </>
         ) : (
           <>
@@ -137,9 +178,14 @@ const App = () => {
                 style={{ width: 40, height: 40, marginRight: 2 }}
               />
             )}} />
+            <Stack.Screen name="MyCustomHook" component={MyCustomHook} options={{ headerShown: false }} /> 
             <Stack.Screen name="AppSettings" component={AppSettings} options={{ headerShown: false }} /> 
             <Stack.Screen name="Account" component={Account} options={{ headerShown: false }} /> 
             <Stack.Screen name="Help" component={Help} options={{ headerShown: false }} /> 
+            <Stack.Screen name="MyShare" component={MyShare}  options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: 'Shared'}}/>
+            <Stack.Screen name="Mylist" component={Mylist}  options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: 'My List'}}/>
+            <Stack.Screen name="Like" component={Like}  options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: 'Liked'}}/>
+            <Stack.Screen name="Forget" component={Forget}  options={{ headerTintColor: 'white', headerStyle: { backgroundColor: 'black' }, headerTitle: 'Forget Password ?'}}/>
           </>
         )}
       </Stack.Navigator>
@@ -148,3 +194,5 @@ const App = () => {
 };
 
 export default App;
+
+

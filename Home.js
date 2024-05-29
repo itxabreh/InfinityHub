@@ -14,7 +14,7 @@ const Home = (props) => {
       style={styles.background}
     >
    <View style={{flex: 0.15, flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center'}}>
-  <TouchableOpacity onPress={() => {}}>
+  <TouchableOpacity onPress={() => {props.navigation.navigate("Privacy")}}>
     <Text style={{marginRight: 13 , fontSize:19, fontWeight:'bold', color:'white'}}>PRIVACY</Text>
   </TouchableOpacity>
 

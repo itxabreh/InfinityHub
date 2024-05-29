@@ -17,67 +17,60 @@ const Login = (props) => {
   const [password, setPassword] = useState('');
   const navigation = useNavigation();
 
-  // const handleSignUp = async (email,password) => {
+  // const handleSignUp = async (email, password) => {
   //   try {
   //     // Proceed with regular email/password authentication
-  //     await firebase.auth().signInWithEmailAndPassword(email, password);
+  //     const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
   
-  //     const currentUser = firebase.auth().currentUser;
+  //     // Access the user object from userCredential
+  //     const user = userCredential.user;
   
-  //     // if (currentUser && !currentUser.emailVerified) {
-  //     //   Alert.alert(
-  //     //     "Email Not Verified",
-  //     //     "You have not verified your email. Kindly verify it.",
-  //     //     [
-  //     //       { text: "OK", onPress: () => console.log("OK Pressed") }
-  //     //     ],
-  //     //     { cancelable: false }
-  //     //   );
-  //     //   return;
-  //     // }
-  
-  //     // User is verified or there's no user, navigate accordingly
-  //     if (currentUser) {
+  //     // Check if there's a current user and the email is verified
+  //     if (user && user.emailVerified) {
+  //       // If the user is verified, navigate to the Tabs screen
   //       navigation.navigate('Tabs');
+  //     } else if (user && !user.emailVerified) {
+  //       // If the user is not verified, show an alert
+  //       Alert.alert(
+  //         "Email Not Verified",
+  //         "You have not verified your email. Kindly verify it.",
+  //         [
+  //           { text: "OK", onPress: () => console.log("OK Pressed") }
+  //         ],
+  //         { cancelable: false }
+  //       );
   //     } else {
   //       // Handle the case where there's no user
   //       console.log("No user found");
   //     }
   //   } catch (error) {
-  //     console.error("Error login :", error);
+  //     console.error("Error login:", error);
   //     // Handle the error gracefully, e.g., show an error message to the user
   //   }
   // };
-  
-  const handleSignUp = async (email, password) => {
+
+
+  const handleSignUp = async () => {
     try {
-      // Proceed with regular email/password authentication
       const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
-  
-      // Access the user object from userCredential
       const user = userCredential.user;
-  
-      // Check if there's a current user and the email is verified
+
       if (user && user.emailVerified) {
-        // If the user is verified, navigate to the Tabs screen
+        await AsyncStorage.setItem('user', JSON.stringify(user));
         navigation.navigate('Tabs');
       } else if (user && !user.emailVerified) {
-        // If the user is not verified, show an alert
         Alert.alert(
           "Email Not Verified",
           "You have not verified your email. Kindly verify it.",
-          [
-            { text: "OK", onPress: () => console.log("OK Pressed") }
-          ],
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
           { cancelable: false }
         );
       } else {
-        // Handle the case where there's no user
         console.log("No user found");
       }
     } catch (error) {
       console.error("Error login:", error);
-      // Handle the error gracefully, e.g., show an error message to the user
+      Alert.alert("Login Error", error.message);
     }
   };
   return (
@@ -112,7 +105,7 @@ const Login = (props) => {
           <Text style={styles.memberbuttonText}>Not a member yet? Start your membership!</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.forgetbutton} onPress={() => { }}>
+        <TouchableOpacity style={styles.forgetbutton} onPress={() => props.navigation.navigate("Forget")}>
           <Text style={styles.forgetbuttonText}>Forgot Your Password?</Text>
         </TouchableOpacity>
       </View>
@@ -213,3 +206,157 @@ const styles = StyleSheet.create({
 });
 
 export default Login;
+
+
+
+// import { StatusBar } from 'expo-status-bar';
+// import { StyleSheet, Text, View, Image, TextInput, TouchableOpacity, Alert } from 'react-native';
+// import React, { useState } from 'react';
+// import AsyncStorage from '@react-native-async-storage/async-storage';
+// import { firebase } from './firebase';
+// import { useNavigation } from '@react-navigation/native';
+
+// const Login = () => {
+//   const [email, setEmail] = useState('');
+//   const [password, setPassword] = useState('');
+//   const navigation = useNavigation();
+
+//   const handleSignIn = async () => {
+//     try {
+//       const userCredential = await firebase.auth().signInWithEmailAndPassword(email, password);
+//       const user = userCredential.user;
+
+//       if (user && user.emailVerified) {
+//         await AsyncStorage.setItem('user', JSON.stringify(user));
+//         navigation.navigate('Tabs');
+//       } else if (user && !user.emailVerified) {
+//         Alert.alert(
+//           "Email Not Verified",
+//           "You have not verified your email. Kindly verify it.",
+//           [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+//           { cancelable: false }
+//         );
+//       } else {
+//         console.log("No user found");
+//       }
+//     } catch (error) {
+//       console.error("Error login:", error);
+//       Alert.alert("Login Error", error.message);
+//     }
+//   };
+
+//   return (
+//     <View style={styles.container}>
+//       <View style={styles.top}>
+//         <Text style={styles.netflix}>INFINITY HUB</Text>
+//       </View>
+
+//       <View style={styles.center}>
+//         <TextInput
+//           style={styles.inputEmail}
+//           placeholder='Email'
+//           value={email}
+//           onChangeText={(email) => setEmail(email)}
+//         />
+//         <TextInput
+//           style={styles.inputPassword}
+//           placeholder='Password'
+//           value={password}
+//           onChangeText={(password) => setPassword(password)}
+//           autoCapitalize='none'
+//           secureTextEntry={true}
+//         />
+//       </View>
+
+//       <View style={styles.center2}>
+//         <TouchableOpacity style={styles.button} onPress={handleSignIn}>
+//           <Text style={styles.buttonText}>Sign In</Text>
+//         </TouchableOpacity>
+
+//         <TouchableOpacity style={styles.member}>
+//           <Text style={styles.memberText}>New to INFINITY HUB? </Text>
+//           <TouchableOpacity onPress={() => navigation.navigate('SignUp')}>
+//             <Text style={styles.signUpText}>Sign Up Now.</Text>
+//           </TouchableOpacity>
+//         </TouchableOpacity>
+//       </View>
+
+//       <StatusBar style='auto' />
+//     </View>
+//   );
+// };
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: 'black',
+//   },
+//   top: {
+//     flex: 0.3,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   netflix: {
+//     color: 'red',
+//     fontSize: 30,
+//     fontWeight: 'bold',
+//   },
+//   center: {
+//     flex: 0.3,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   inputEmail: {
+//     backgroundColor: 'gray',
+//     width: 300,
+//     height: 40,
+//     borderRadius: 5,
+//     margin: 10,
+//     padding: 10,
+//     color: 'white',
+//   },
+//   inputPassword: {
+//     backgroundColor: 'gray',
+//     width: 300,
+//     height: 40,
+//     borderRadius: 5,
+//     margin: 10,
+//     padding: 10,
+//     color: 'white',
+//   },
+//   center2: {
+//     flex: 0.4,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   button: {
+//     backgroundColor: 'red',
+//     width: 300,
+//     height: 40,
+//     borderRadius: 5,
+//     margin: 10,
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   buttonText: {
+//     color: 'white',
+//     fontSize: 20,
+//     fontWeight: 'bold',
+//   },
+//   member: {
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   memberText: {
+//     color: 'white',
+//     fontSize: 12,
+//   },
+//   signUpText: {
+//     color: 'red',
+//     fontSize: 12,
+//     fontWeight: 'bold',
+//   },
+// });
+
+// export default Login;

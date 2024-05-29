@@ -1,5 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View, Image, Button, TextInput , TouchableOpacity,ImageBackground, ScrollView , Switch ,Alert } from 'react-native';
+import { StyleSheet, Text, View, Image, Button, TextInput , TouchableOpacity,ImageBackground, ScrollView , Switch ,Alert , KeyboardAvoidingView } from 'react-native';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import React, { useState, useEffect } from 'react';
@@ -56,6 +56,8 @@ const SignUp = (props) => {
   
     return (
       // <ScrollView>
+      <KeyboardAvoidingView  style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.container}>
   {/* top */}
         <View style={styles.top}>
@@ -98,12 +100,19 @@ const SignUp = (props) => {
   
   <TouchableOpacity style={styles.button} onPress={() => registerUser(email,password,fullName)}>
             <Text style={styles.buttonText}>Sign Up</Text>
-          </TouchableOpacity>        
-  </View>
+          </TouchableOpacity>   
 
-        <StatusBar style="auto" />
+          <TouchableOpacity style={styles.forgetbutton} onPress={() => props.navigation.navigate("Login")}>
+          <Text style={styles.forgetbuttonText}>Already Have An Account? Go To Login</Text>
+        </TouchableOpacity>     
+  </View>
+{/* 
+        <StatusBar style="auto" /> */}
   
       </View>
+      </ScrollView>
+      <StatusBar style="auto" />
+    </KeyboardAvoidingView>
       // {/* </ScrollView> */}
     );
   }
@@ -112,6 +121,10 @@ const SignUp = (props) => {
     container: {
       flex: 1,
       backgroundColor:'black'
+    },
+    scrollContainer: {
+      backgroundColor:'black'
+
     },
     top:
     {
@@ -151,6 +164,17 @@ const SignUp = (props) => {
       marginTop:2,
     
     },
+    forgetbutton: {
+      height: 40,
+      justifyContent: 'center',
+      paddingTop:20
+      // alignItems: 'center',
+    },
+    forgetbuttonText: {
+      color: 'grey',
+      fontSize: 15.3,
+      fontWeight:'bold'
+    },
     inputPassword:
     {
       marginBottom:7,
@@ -170,7 +194,7 @@ const SignUp = (props) => {
     },
     
     button: {
-      width: 230, // Define the width of the TouchableOpacity
+      width: 200, // Define the width of the TouchableOpacity
       height: 40, // Define the height of the TouchableOpacity
       marginTop: 20, // Add marginTop for space
       alignItems: 'center', // Center content horizontally

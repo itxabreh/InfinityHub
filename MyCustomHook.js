@@ -1,4 +1,3 @@
-// useMovieData.js
 import { useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
